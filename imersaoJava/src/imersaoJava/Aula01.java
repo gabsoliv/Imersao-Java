@@ -1,68 +1,50 @@
  package imersaoJava;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 public class Aula01 {
 
     public static void main(String[] args) throws Exception {
     	
     	
-    	// fazer uma conexão HTTP e buscar os top 250 filmes   	
+    	// exibir e manipular os dados 
+        String textoFigurinha = "Aprovado!";
+    	var diretorio = new File("stickers/");
+        diretorio.mkdir();
+        
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-        URI endereco = URI.create(url);
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
-
-        // extrair só os dados que interessam (titulo, poster, classificação)
-        var parser = new JsonParser();
-        List<Map<String, String>> listaDeFilmes = parser.parse(body);
+        var http = new ClientHttp();
+        String json = http.buscaDados(url);
+        ExtratorConteudo extrator = new ExtratorConteudoImdb();
+        List<Conteudo> conteudos = extrator.extraiConteudos(json);
         
         
+        /*
+        String url = "https://api.nasa.gov/planetary/apod?api_key=rD2p55hAXOWjcsupmsJAjHtr7cfY57yeD8AgWppQ&start_date=2022-06-12&end_date=2022-06-30";        
+        var http = new ClientHttp();
+        String json = http.buscaDados(url);
+        ExtratorConteudo extrator = new ExtratorConteudoNasa();
+        List<Conteudo> conteudos = extrator.extraiConteudos(json);
+        */
         
-        // exibir e manipular os dados
-        for (Map<String,String> filme : listaDeFilmes) {
+        var geradora = new Aula02();
+        
+        for (int i = 0; i < 10 ; i++) {
         	
-        	var diretorio = new File("stickers/");
-            diretorio.mkdir();
-      
-        	String urlImagem = filme.get("image");
-        	String urlImagemMaior = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,]+).jpg", "$1.jpg");
-            String titulo = filme.get("title");
-            double classificacao = Double.parseDouble(filme.get("imDbRating"));
-            
-            String textoFigurinha;
-            InputStream imagemGabs;
-            if (classificacao >= 9.0 ) {
-            	textoFigurinha = "Aprovado!";
-            	imagemGabs = new FileInputStream(new File("sobreposicao/sorrindo.PNG"));
-            	
-            } else {
-            	textoFigurinha = "HMMMMMM...";
-            	imagemGabs = new FileInputStream(new File("sobreposicao/pensando.PNG"));
-            }
+        	Conteudo conteudo = conteudos.get(i);
 
-            InputStream inputStreamm = new URL(urlImagemMaior).openStream();
-            String nomeArquivo = diretorio + titulo +".png";
+        	InputStream inputStreamm = new URL(conteudo.getUrlDaImagem()).openStream();
+            String nomeArquivo = diretorio + conteudo.getTitulo() +".png";
 
-            var geradora = new Aula02();
-            geradora.cria(inputStreamm, nomeArquivo, textoFigurinha, imagemGabs);
+            geradora.cria(inputStreamm, nomeArquivo, textoFigurinha);
 
-            System.out.println(titulo);
+            System.out.println(conteudo.getTitulo());
             System.out.println();
 
-        	}   
-        
+       }
+
     }
 }
