@@ -1,6 +1,10 @@
-package imersaoJava;
+ package imersaoJava;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -11,7 +15,9 @@ import java.util.Map;
 public class Aula01 {
 
     public static void main(String[] args) throws Exception {
-
+    	
+    	
+    	// fazer uma conexão HTTP e buscar os top 250 filmes   	
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
         URI endereco = URI.create(url);
         var client = HttpClient.newHttpClient();
@@ -19,24 +25,44 @@ public class Aula01 {
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         String body = response.body();
 
+        // extrair só os dados que interessam (titulo, poster, classificação)
         var parser = new JsonParser();
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
-  
+        
+        
+        
+        // exibir e manipular os dados
         for (Map<String,String> filme : listaDeFilmes) {
-        	double toRank = Double.parseDouble(filme.get("imDbRating"));
-            int amountOfStars = (int) toRank;
-            for (int i = 1; i <= amountOfStars ; i++) {           	
-                System.out.print("⭐");
-                          	
+        	
+        	var diretorio = new File("stickers/");
+            diretorio.mkdir();
+      
+        	String urlImagem = filme.get("image");
+        	String urlImagemMaior = urlImagem.replaceFirst("(@?\\.)([0-9A-Z,]+).jpg", "$1.jpg");
+            String titulo = filme.get("title");
+            double classificacao = Double.parseDouble(filme.get("imDbRating"));
+            
+            String textoFigurinha;
+            InputStream imagemGabs;
+            if (classificacao >= 9.0 ) {
+            	textoFigurinha = "Aprovado!";
+            	imagemGabs = new FileInputStream(new File("sobreposicao/sorrindo.PNG"));
+            	
+            } else {
+            	textoFigurinha = "HMMMMMM...";
+            	imagemGabs = new FileInputStream(new File("sobreposicao/pensando.PNG"));
             }
-         
-            System.out.println("\n\u001b[1mMovie Title: \u001b[m" + filme.get("title"));
-            System.out.println("\u001b[1mURL da Imagem: \u001b[m" + filme.get("image"));
-            System.out.println("\u001b[37m\u001b[40mRating:" + filme.get("imDbRating") + "\u001b[m");
-            
-            
-            System.out.println("\n");
-            
-        }
+
+            InputStream inputStreamm = new URL(urlImagemMaior).openStream();
+            String nomeArquivo = diretorio + titulo +".png";
+
+            var geradora = new Aula02();
+            geradora.cria(inputStreamm, nomeArquivo, textoFigurinha, imagemGabs);
+
+            System.out.println(titulo);
+            System.out.println();
+
+        	}   
+        
     }
 }
