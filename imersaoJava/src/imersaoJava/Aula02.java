@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 public class Aula02 {
     
 
-    public void cria(InputStream inputStream, String nomeArquivo, String texto, InputStream inputStreamSobreposicao) throws Exception {
+    public void cria(InputStream inputStream, String nomeArquivo, String texto ) throws Exception {
 
         // leitura da imagem
         // InputStream inputStream = 
@@ -27,6 +27,7 @@ public class Aula02 {
         // InputStream inputStream = 
         //                 new URL("https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@.jpg")
         //                 .openStream();
+    	// 
         BufferedImage imagemOriginal = ImageIO.read(inputStream);
 
         // cria nova imagem em memória com transparência e com tamanho novo
@@ -39,8 +40,8 @@ public class Aula02 {
         Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
-        BufferedImage imagemSobreposicao = ImageIO.read(inputStreamSobreposicao);
-        graphics.drawImage(imagemSobreposicao, 0, 1400, null);
+        //BufferedImage imagemSobreposicao = ImageIO.read(inputStreamSobreposicao);
+        //graphics.drawImage(imagemSobreposicao, 0, 1350, null);
         
         // configurar a fonte
         var fonte = new Font(Font.MONOSPACED, Font.ITALIC, 100);
