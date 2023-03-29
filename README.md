@@ -24,3 +24,21 @@ Em seguida seu título, a url da sua imagem e a classificação real dele com ba
 </p>
 
 ![image](https://user-images.githubusercontent.com/96774385/228095604-18199418-8bfa-41b8-9c9a-100657778eca.png)
+
+<h1>Aula 02</h1>
+<p>Aula 2 finalizada!
+Ontem aprendi a criar diretórios de saída de imagens usando uma api externa que retorna uma variedade de filmes.
+De acordo com a classificação de cada um, foi adicionado um texto com contorno e uma foto que indica que se o filme é recomendado ou não.</p>
+
+![stickersPulp Fiction (1)](https://user-images.githubusercontent.com/96774385/228666528-bf2dbad0-2344-4836-942b-34f08e459a5a.png)
+
+
+<h1>Aula 03</h1>
+
+<p>
+Aula 03 finalizada com sucesso!
+Refatoração no código. Agora podemos gerar figurinhas de várias api externas.
+</p>
+
+![image](https://user-images.githubusercontent.com/96774385/228667692-eff34619-aac9-447f-b5f3-06e261cc7e28.png)
+
